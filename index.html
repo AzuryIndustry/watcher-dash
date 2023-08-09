@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watcher</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('profileid');
+
+        if(!id) {
+            // open a popup telling users to add ?profileid= to the url
+            let promptElement = document.createElement("div");
+            promptElement.innerHTML = `
+            <div class="prompt" style="width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div class="prompt-content" style="width: 50%; height: 50%; background-color: #2f3136; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h1 style="color: white; font-size: 30px; margin-bottom: 10px;">Watcher</h1>
+                    <h3 style="color: white; font-size: 20px; margin-bottom: 10px;">Please add <code>?profileid=</code> to the url</h3>
+                    <a href="https://dash.watcherbot.me" class="btn" style="color: white; justify-content: right; align-items: right; display: flex; flex-direction: row; margin-left: 10px; margin-right: 10px; margin-bottom: 10px; background-color: #7289da; border-radius: 5px; padding: 10px;">
+                        <i class="fas fa-arrow-left" style="margin-right: 10px;"></i>
+                        Okay
+                    </a>
+                </div>
+            </div>
+            `;
+            document.body.appendChild(promptElement);
+        }
+
+        let apiURL = 'http://199.192.22.133:5000/api/checkuser?userid=' + id;
+        
+        const profileid = $.ajax({
+            url: apiURL,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                return data;
+            },
+            error: function(err) {
+                const errorString = JSON.stringify(err);
+
+                let promptElement = document.createElement("div");
+                promptElement.innerHTML = `
+                <div class="prompt" style="width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <div class="prompt-content" style="width: 50%; height: 50%; background-color: #2f3136; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                        <h1 style="color: white; font-size: 30px; margin-bottom: 10px;">Watcher</h1>
+                        <h3 style="color: white; font-size: 20px; margin-bottom: 10px; background-color: #1c1e20; padding: 10px; border-radius: 5px;">${errorString}</h3>
+                        <a href="https://dash.watcherbot.me" class="btn" style="color: white; justify-content: right; align-items: right; display: flex; flex-direction: row; margin-left: 10px; margin-right: 10px; margin-bottom: 10px; background-color: #7289da; border-radius: 5px; padding: 10px;">
+                            <i class="fas fa-circle-notch" style="margin-right: 10px;"></i>
+                            Refresh
+                        </a>
+                    </div>
+                </div>
+                `;
+                return document.body.appendChild(promptElement);
+            }
+        });
+
+        let apiURL2 = 'http://199.192.22.133:5000/api/checkhosts?userid=' + id;
+
+        const hostedbot = $.ajax({
+            url: apiURL2,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                return data;
+            },
+            error: function(err) {
+                const errorString = JSON.stringify(err);
+
+                let promptElement = document.createElement("div");
+                promptElement.innerHTML = `
+                <div class="prompt" style="width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <div class="prompt-content" style="width: 50%; height: 50%; background-color: #2f3136; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                        <h1 style="color: white; font-size: 30px; margin-bottom: 10px;">Watcher</h1>
+                        <h3 style="color: white; font-size: 20px; margin-bottom: 10px; background-color: #1c1e20; padding: 10px; border-radius: 5px;">${errorString}</h3>
+                        <a href="https://dash.watcherbot.me" class="btn" style="color: white; justify-content: right; align-items: right; display: flex; flex-direction: row; margin-left: 10px; margin-right: 10px; margin-bottom: 10px; background-color: #7289da; border-radius: 5px; padding: 10px;">
+                            <i class="fas fa-circle-notch" style="margin-right: 10px;"></i>
+                            Refresh
+                        </a>
+                    </div>
+                </div>
+                `;
+                return document.body.appendChild(promptElement);
+            }
+        });
+
+        setTimeout(function() {
+        const profileidJSON = JSON.parse(JSON.stringify(profileid.responseJSON));
+
+        if(profileidJSON.error) {
+            if(!id) return;
+            let promptElement = document.createElement("div");
+            promptElement.innerHTML = `
+            <div class="prompt" style="width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div class="prompt-content" style="width: 50%; height: 50%; background-color: #2f3136; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h1 style="color: white; font-size: 30px; margin-bottom: 10px;">Watcher</h1>
+                    <h3 style="color: white; font-size: 20px; margin-bottom: 10px; background-color: #1c1e20; padding: 10px; border-radius: 5px;">${profileidJSON.error}</h3>
+                    <a href="https://dash.watcherbot.me" class="btn" style="color: white; justify-content: right; align-items: right; display: flex; flex-direction: row; margin-left: 10px; margin-right: 10px; margin-bottom: 10px; background-color: #7289da; border-radius: 5px; padding: 10px;">
+                        <i class="fas fa-circle-notch" style="margin-right: 10px;"></i>
+                        Refresh
+                    </a>
+                </div>
+            </div>
+            `;
+            return document.body.appendChild(promptElement);
+        }
+
+        setTimeout(function() {
+        document.getElementById("profileid").innerHTML = `${profileidJSON.user.username}`;
+        document.getElementById("profileimg").src = `${profileidJSON.user.avatar}`;
+
+        const hostedbotJSON = JSON.parse(JSON.stringify(hostedbot.responseJSON));
+        const allHostedBots = hostedbotJSON.bots;
+
+        if(hostedbotJSON.error) {
+            if(!id) return;
+            let promptElement = document.createElement("div");
+            promptElement.innerHTML = `
+            <div class="prompt" style="width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div class="prompt-content" style="width: 50%; height: 50%; background-color: #2f3136; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h1 style="color: white; font-size: 30px; margin-bottom: 10px;">Watcher</h1>
+                    <h3 style="color: white; font-size: 20px; margin-bottom: 10px; background-color: #1c1e20; padding: 10px; border-radius: 5px;">${hostedbotJSON.error}</h3>
+                    <a href="https://dash.watcherbot.me" class="btn" style="color: white; justify-content: right; align-items: right; display: flex; flex-direction: row; margin-left: 10px; margin-right: 10px; margin-bottom: 10px; background-color: #7289da; border-radius: 5px; padding: 10px;">
+                        <i class="fas fa-circle-notch" style="margin-right: 10px;"></i>
+                        Refresh
+                    </a>
+                </div>
+            </div>
+            `;
+            return document.body.appendChild(promptElement);
+        }
+        if(!allHostedBots.length) return;
+
+        let hostedBotHTML = "";
+        allHostedBots.forEach(async(bot) => {
+            let botDocument = document.getElementById("hosted-bot");
+            let botUser = $.ajax({
+                url: 'http://199.192.22.133:5000/api/checkuser?userid=' + bot.botID,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    return data;
+                },
+                error: function(err) {
+                    return;
+                }
+            });
+
+            setTimeout(function() {
+                let botUserJSON = JSON.parse(JSON.stringify(botUser.responseJSON));
+                hostedBotHTML += `
+                <div class="card" style="width: fit-content; background-color: #2f3136; border-radius: 10px; margin: 10px; padding: 10px; display: flex; flex-direction: row; justify-content: space-between;">
+                    <div class="card-img">
+                        <img src="${botUserJSON.user.avatar}" alt="" style="border-radius: 50%; width: 100px; height: 100px;">
+                    </div>
+                    <div class="card-text">
+                        <h1>${botUserJSON.user.username}<span style="color: #7289da;">#${botUserJSON.user.discriminator}</span></h1>
+                        <h4 style="color: ${botUserJSON.user.status == "online" ? "#43b581" : botUserJSON.user.status == "restarting" ? "#faa61a" : botUserJSON.user.status == "error" ? "#f04747" : "#747f8d" }; margin-left: 10px; padding-bottom: 10px;"> &bull; ${botUserJSON.user.status.toUpperCase()}</h4>
+                        
+                        <div class="card-btn">
+                            <!-- on the right bottom of the card display a link icon -->
+                            <a href="https://discord.com/api/oauth2/authorize?client_id=${bot.botID}&permissions=14337&scope=bot%20applications.commands" target="_blank" class="btn" style="color: white; justify-content: right; align-items: right; display: flex; flex-direction: row; margin-left: 10px; margin-right: 10px; margin-bottom: 10px;">
+                                <i class="fas fa-link" style="margin-right: 10px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                `;
+                botDocument.innerHTML = hostedBotHTML;
+            }, 1000);
+        });
+
+        let botDocument = document.getElementById("hosted-bot");
+        botDocument.innerHTML = hostedBotHTML;
+
+        }, 1000);
+        }, 1000);
+    </script>
+    <!-- navbar -->
+    <header>
+        <h1 class="logo">Watcher</h1>
+        <a id="profileid" class="btn-area">Loading...</a>
+    </header>
+    <!-- navbar end -->
+    <!-- home -->
+    <div class="wrapper">
+        <div class="home" id="home">
+            <div class="home-text">
+                <h1 id="botname">Watcher | Hosting Lists</h1>
+                <h3 style="margin-left: 0;">View the list of hosts for the selected user</h3>
+            </div>
+            <div class="home-img">
+                <img id="profileimg" src="https://cdn.discordapp.com/attachments/1137562848298545213/1138608686303019019/image.png" alt="">
+            </div>
+        </div>
+    </div>
+    <!-- home end -->
+    <!-- features -->
+    <div class="features">
+        <div class="curve">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill-opacity="1" id="features"
+                    d="M0,128L48,149.3C96,171,192,213,288,229.3C384,245,480,235,576,202.7C672,171,768,117,864,96C960,75,1056,85,1152,106.7C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+                </path>
+            </svg>
+        </div>
+        <div class="wrapper reveal">
+            <div class="title">
+                <div class="th1">
+                    <h1>Hosted Watcher bots</h1>
+                </div>
+                <center>
+                    <div class="thr">
+                        <hr>
+                    </div>
+                </center>
+            </div>
+            <div class="column reveal reveal-left features-grid" style="grid-row: auto; display: flex; flex-direction: column; flex-wrap: wrap; justify-content: center; align-items: center;">
+            <div id="hosted-bot">
+                <!-- add a pulsing blank card -->
+                <div class="card" style="width: fit-content; background-color: #2f3136; border-radius: 10px; margin: 10px; padding: 10px; display: flex; flex-direction: row; justify-content: space-between;">
+                    <div class="card-img">
+                        <img src="https://cdn.discordapp.com/attachments/1130580867249614888/1138890240103288912/R.png" alt="" style="border-radius: 50%; width: 100px; height: 100px;">
+                    </div>
+                    <div class="card-text">
+                        <h1 style="background-color: #1c1e20; margin-left: 10px; padding-bottom: 10px; border-radius: 5px; width: 300px; height: 20px;"></h1>
+                        <h4 style="background-color: #1c1e20; margin-left: 10px; margin-top: 5px; padding-bottom: 10px; border-radius: 5px; width: 50px; height: 20px;"></h4>
+                        
+                        <div class="card-btn">
+                            <!-- on the right bottom of the card display a link icon -->
+                            <a target="_blank" class="btn" style="color: white; justify-content: right; align-items: right; display: flex; flex-direction: row; margin-left: 10px; margin-right: 10px; margin-bottom: 10px;">
+                                <i class="fas fa-link" style="margin-right: 10px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="curved">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill-opacity="1" id="commands"
+                    d="M0,224L48,229.3C96,235,192,245,288,218.7C384,192,480,128,576,133.3C672,139,768,213,864,229.3C960,245,1056,203,1152,186.7C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+                </path>
+            </svg>
+        </div>
+    </div>
+    <!-- features end -->
+    
+    <!-- faq -->
+    <div class="faq">
+        <div class="curve">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill-opacity="1" id="faq"
+                    d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+                </path>
+            </svg>
+        </div>
+        <div class="wrapper reveal">
+            <main id="questions" role="main">
+                <div class="title">
+                    <div class="th1">
+                        <h1>Frequently Asked Questions</h1>
+                    </div>
+                    <center>
+                        <div class="thr">
+                            <hr>
+                        </div>
+                    </center>
+                </div>
+                <input type="text" class="live-search-box" placeholder="Search an Answer..." />
+                <!-- question start -->
+                <div class="topic">
+                    <div class="open">
+
+                        <h2 class="question">Is the service of creating hosts free?</h2>
+                        <span class="faq-t"></span>
+                    </div>
+                    <p class="answer">Yes, all of our services are free, only cost are <b>Watcher Coins</b> which are earned in the <a href="https://discord.gg/azuryindustry">support</a> discord server.</p>
+                </div>
+                <!-- question end -->
+                <!-- question start -->
+                <div class="topic">
+                    <div class="open">
+
+                        <h2 class="question">How do I get a custom host?</h2>
+                        <span class="faq-t"></span>
+                    </div>
+                    <p class="answer">You can get a custom host by inviting <a href="https://discord.com/api/oauth2/authorize?client_id=851537757981114389&permissions=14337&scope=bot%20applications.commands">Watcher</a> to your server and using the <code>/create</code> command.</p>
+                </div>
+                <!-- question end -->
+                <!-- question start -->
+                <div class="topic">
+                    <div class="open">
+
+                        <h2 class="question">My host is not working, what do I do?</h2>
+                        <span class="faq-t"></span>
+                    </div>
+                    <p class="answer">If your Watcher host is not working, you can simple use the <code>/manage</code> command to restart your service, if that doesnt work then join our <a href="https://discord.gg/azuryindustry">support</a> discord server and ask for help.</p>
+                </div>
+                <!-- question end -->
+            </main>
+        </div>
+
+        <!-- add a line -->
+        <style>
+            .line {
+                width: 80%;
+                height: 1px;
+                background-color: #2f3136;
+                margin-top: 50px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
+        <div class="line"></div>
+
+        <footer>
+            <div class="wrapper">
+                <div class="foot">
+                    <h1>@Watcher</h1>
+                    <h4>Copyright ©2023 Azury Industries</h4>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <!-- faq end -->
+
+    <script src="main.js"></script>
+    <script src="commands.js"></script>
+    <script src="https://code.iconify.design/1/1.0.4/iconify.min.js">   </script>
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+</body>
+
+
+</html>
