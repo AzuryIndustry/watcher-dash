@@ -34,7 +34,7 @@
             document.body.appendChild(promptElement);
         }
 
-        let apiURL = 'http://199.192.22.133:5000/api/checkuser?userid=' + id;
+        let apiURL = 'https://azuryapi.59795528654034779217.repl.co/api/checkuser?userid=' + id;
         
         const profileid = $.ajax({
             url: apiURL,
@@ -63,7 +63,7 @@
             }
         });
 
-        let apiURL2 = 'http://199.192.22.133:5000/api/checkhosts?userid=' + id;
+        let apiURL2 = 'https://azuryapi.59795528654034779217.repl.co/api/checkhosts?userid=' + id;
 
         const hostedbot = $.ajax({
             url: apiURL2,
@@ -143,7 +143,7 @@
         allHostedBots.forEach(async(bot) => {
             let botDocument = document.getElementById("hosted-bot");
             let botUser = $.ajax({
-                url: 'http://199.192.22.133:5000/api/checkuser?userid=' + bot.botID,
+                url: 'https://azuryapi.59795528654034779217.repl.co/api/checkuser?userid=' + bot.botID,
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
